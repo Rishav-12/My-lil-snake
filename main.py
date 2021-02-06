@@ -4,7 +4,7 @@ from math import sqrt
 pygame.init()
 
 screen = pygame.display.set_mode((600, 500))
-pygame.display.set_caption("Beetle Game")
+pygame.display.set_caption("Snakes")
 font = pygame.font.Font("MICROSS.TTF", 30)
 over_font = pygame.font.Font("MICROSS.TTF", 60)
 
