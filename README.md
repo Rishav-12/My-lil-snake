@@ -1,4 +1,4 @@
-# Beetles
+# My-lil-snake
 A Fun Project/Game
 
 ### Motivation
