@@ -1,4 +1,4 @@
-# My-lil-snake
+# snakes
 A Fun Project/Game
 
 ### Motivation
