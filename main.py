@@ -1,6 +1,8 @@
+# PLease read the README for instructions
 import pygame
 import random
 from math import sqrt
+import os
 pygame.init()
 
 screen = pygame.display.set_mode((600, 500))
@@ -44,6 +46,13 @@ def game_over():
 	over_text = over_font.render(f"Game Over", True, red)
 	screen.blit(over_text, (150, 210))
 
+if not os.path.exists("highScore.txt"):
+	with open("highScore.txt", "w") as file:
+		file.write("0")
+
+with open("highScore.txt", "r") as file:
+		hiscore = int(file.read())
+
 running = True
 gameover = False
 
@@ -52,6 +61,8 @@ while running:
 		game_over()
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
+				with open("highScore.txt", "w") as file:
+					file.write(str(hiscore))
 				running = False
 	else:
 		screen.fill(white)
@@ -109,8 +120,11 @@ while running:
 		if head in snk_list[:-1]:
 			gameover = True
 
-		score = font.render(f"Score: {score_value}", True, black)
-		screen.blit(score, (5, 5))
+		if score_value > hiscore:
+			hiscore = score_value
+
+		score_hiscore = font.render(f"Score: {score_value}  High Score: {hiscore}", True, black)
+		screen.blit(score_hiscore, (5, 5))
 		plot_snake()
 		pygame.draw.rect(screen, red, [foodX, foodY, food_size, food_size])
 

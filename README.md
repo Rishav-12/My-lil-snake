@@ -18,3 +18,5 @@ Working with pygame to make simple 2D games
 * The snake dies if it hits the walls or its own tail
 * You eat one food, you get 10 points
 * Also speed increases as you collect points
+* High Score implemented
+* **Note**: If you quit midway, your high score will not get registered
