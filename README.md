@@ -10,7 +10,6 @@ Working with pygame to make simple 2D games
 
 ### Description
 * Built using Pygame
-* I kept the last version of the game here in 'prev.py' because I actually liked it and its still playable
 
 ### How to play
 * Start the game by double-clicking main.py file
