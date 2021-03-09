@@ -12,10 +12,10 @@ Working with pygame to make simple 2D games
 * Built using Pygame
 
 ### How to play
-* Start the game by double-clicking main.py file
+* Double-click main.py file to start
 * Use arrow keys to control the snake
 * The snake dies if it hits the walls or its own tail
-* You eat one food, you get 10 points
-* Also speed increases as you collect points
+* Consuming one food gets you 10 points
+* Speed of the snake increases as you collect more points
 * High Score implemented
 * **Note**: If you quit midway, your high score will not get registered
