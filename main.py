@@ -99,13 +99,25 @@ while running:
 		if len(snk_list) > snk_len:
 			del snk_list[0]
 
-		if score_value >= 120:
-			init_vel = 8
+		if score_value >= 100:
+			init_vel = 6
+		if score_value >= 150:
+			init_vel = 7
 		if score_value >= 200:
+			init_vel = 8
+		if score_value >= 250:
+			init_vel = 9
+		if score_value >= 300:
 			init_vel = 10
-		if score_value >= 280:
+		if score_value >= 330:
+			init_vel = 11
+		if score_value >= 360:
 			init_vel = 12
-		if score_value >= 350:
+		if score_value >= 390:
+			init_vel = 13
+		if score_value >= 420:
+			init_vel = 14
+		if score_value >= 450:
 			init_vel = 15
 
 		if iscollision(snakeX, snakeY, foodX, foodY):
