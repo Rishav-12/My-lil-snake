@@ -1,50 +1,62 @@
-# PLease read the README for instructions
+# Please read the README for instructions
 import pygame
 import random
-from math import sqrt
 import os
 pygame.init()
 
-screen = pygame.display.set_mode((600, 500))
+S_WIDTH, S_HEIGHT = 480, 480
+screen = pygame.display.set_mode((S_WIDTH, S_HEIGHT))
 pygame.display.set_caption("Snakes")
 font = pygame.font.Font("MICROSS.TTF", 30)
 over_font = pygame.font.Font("MICROSS.TTF", 60)
 
 white = (255, 255, 255)
 red = (255, 0, 0)
+green = (0, 255, 0)
 black = (0, 0, 0)
 
-snakeX = 250
-snakeY = 200
+snakeX = 150
+snakeY = 150
 snk_size = 15
-init_vel = 5
+init_vel = 15
 velX = 0
 velY = 0
 
 snk_list = []
 snk_len = 1
 
-foodX = random.randint(0, 560)
-foodY = random.randint(0, 460)
 food_size = 15
 score_value = 0
 direction = ""
 clock = pygame.time.Clock()
 
 def plot_snake():
-	for coord in snk_list:
-		pygame.draw.rect(screen, black, [coord[0], coord[1], snk_size, snk_size])
+	for i, coord in enumerate(snk_list):
+		if i == len(snk_list) - 1:
+			pygame.draw.rect(screen, green, [coord[0], coord[1], snk_size, snk_size])
+		else:
+			pygame.draw.rect(screen, black, [coord[0], coord[1], snk_size, snk_size])
 
 def iscollision(x1, y1, x2, y2):
-	dist = sqrt((x2 - x1)**2 + (y2 - y1)**2)
-	if dist < 10:
+	if x1 == x2 and y1 == y2:
 		return True
+
+def plot_food():
+	foodX = random.randint(15, S_WIDTH-1)
+	foodX = foodX - (foodX % 15)
+
+	foodY = random.randint(15, S_HEIGHT-1)
+	foodY = foodY - (foodY % 15)
+
+	return foodX, foodY
 
 def game_over():
 	velX = 0
 	velY = 0
 	over_text = over_font.render(f"Game Over", True, red)
-	screen.blit(over_text, (150, 210))
+	screen.blit(over_text, (90, 190))
+
+foodX, foodY = plot_food()
 
 if not os.path.exists("highScore.txt"):
 	with open("highScore.txt", "w") as file:
@@ -89,7 +101,7 @@ while running:
 
 		snakeX += velX
 		snakeY += velY
-		clock.tick(30)
+		clock.tick(10)
 
 		head = []
 		head.append(snakeX)
@@ -99,34 +111,12 @@ while running:
 		if len(snk_list) > snk_len:
 			del snk_list[0]
 
-		if score_value >= 100:
-			init_vel = 6
-		if score_value >= 150:
-			init_vel = 7
-		if score_value >= 200:
-			init_vel = 8
-		if score_value >= 250:
-			init_vel = 9
-		if score_value >= 300:
-			init_vel = 10
-		if score_value >= 330:
-			init_vel = 11
-		if score_value >= 360:
-			init_vel = 12
-		if score_value >= 390:
-			init_vel = 13
-		if score_value >= 420:
-			init_vel = 14
-		if score_value >= 450:
-			init_vel = 15
-
 		if iscollision(snakeX, snakeY, foodX, foodY):
 			score_value += 10
-			foodX = random.randint(0, 560)
-			foodY = random.randint(0, 460)
-			snk_len += 5
-		
-		if snakeX < 0 or snakeX > 600 or snakeY < 0 or snakeY > 500:
+			foodX, foodY = plot_food()
+			snk_len += 1
+
+		if snakeX < 0 or snakeX > S_WIDTH or snakeY < 0 or snakeY > S_HEIGHT:
 			gameover = True
 
 		if head in snk_list[:-1]:
