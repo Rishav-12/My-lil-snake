@@ -2,19 +2,23 @@
 import pygame
 import random
 import os
-pygame.init()
 
+#--Setup--
+pygame.init()
 S_WIDTH, S_HEIGHT = 480, 480
 screen = pygame.display.set_mode((S_WIDTH, S_HEIGHT))
 pygame.display.set_caption("Snakes")
 font = pygame.font.Font("MICROSS.TTF", 30)
 over_font = pygame.font.Font("MICROSS.TTF", 60)
+clock = pygame.time.Clock()
 
+#--Global variables--
 white = (255, 255, 255)
 red = (255, 0, 0)
 green = (0, 255, 0)
 black = (0, 0, 0)
 
+#--Game-specific variables--
 snakeX = 150
 snakeY = 150
 snk_size = 15
@@ -22,13 +26,9 @@ init_vel = 15
 velX = 0
 velY = 0
 
-snk_list = []
-snk_len = 1
-
 food_size = 15
 score_value = 0
 direction = ""
-clock = pygame.time.Clock()
 
 def plot_snake():
 	for i, coord in enumerate(snk_list):
@@ -37,11 +37,7 @@ def plot_snake():
 		else:
 			pygame.draw.rect(screen, black, [coord[0], coord[1], snk_size, snk_size])
 
-def iscollision(x1, y1, x2, y2):
-	if x1 == x2 and y1 == y2:
-		return True
-
-def plot_food():
+def get_food_coords():
 	foodX = random.randint(15, S_WIDTH-1)
 	foodX = foodX - (foodX % 15)
 
@@ -50,13 +46,19 @@ def plot_food():
 
 	return foodX, foodY
 
+def is_food_eaten(x1, y1, x2, y2):
+	if x1 == x2 and y1 == y2:
+		return True
+
 def game_over():
 	velX = 0
 	velY = 0
 	over_text = over_font.render(f"Game Over", True, red)
 	screen.blit(over_text, (90, 190))
 
-foodX, foodY = plot_food()
+foodX, foodY = get_food_coords()
+snk_list = []
+snk_len = 1
 
 if not os.path.exists("highScore.txt"):
 	with open("highScore.txt", "w") as file:
@@ -111,14 +113,16 @@ while running:
 		if len(snk_list) > snk_len:
 			del snk_list[0]
 
-		if iscollision(snakeX, snakeY, foodX, foodY):
+		if is_food_eaten(snakeX, snakeY, foodX, foodY):
 			score_value += 10
-			foodX, foodY = plot_food()
+			foodX, foodY = get_food_coords()
 			snk_len += 1
 
+		# Check collision with walls
 		if snakeX < 0 or snakeX > S_WIDTH or snakeY < 0 or snakeY > S_HEIGHT:
 			gameover = True
 
+		# Check if the snake runs into itself
 		if head in snk_list[:-1]:
 			gameover = True
 
