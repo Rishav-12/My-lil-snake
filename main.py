@@ -18,24 +18,56 @@ red = (255, 0, 0)
 green = (0, 255, 0)
 black = (0, 0, 0)
 
-#--Game-specific variables--
-snakeX = 150
-snakeY = 150
-snk_size = 15
-init_vel = 15
-velX = 0
-velY = 0
+class Snake():
+	"""
+	defines the snake
+	"""
+	def __init__(self):
+		self.x = 150
+		self.y = 150
+		self.size = 15
+		self.init_vel = 15
+		self.velx = 0
+		self.vely = 0
+		self.list = []
+		self.len = 1
+		self.head = []
 
+	def draw(self):
+		for i, coord in enumerate(self.list):
+			if i == len(self.list) - 1:
+				pygame.draw.rect(screen, green, [coord[0], coord[1], self.size, self.size])
+			else:
+				pygame.draw.rect(screen, black, [coord[0], coord[1], self.size, self.size])
+
+	def update(self):
+		self.x += self.velx
+		self.y += self.vely
+		self.head = []
+		self.head.append(self.x)
+		self.head.append(self.y)
+		self.list.append(self.head)
+
+		if len(self.list) > self.len:
+			del self.list[0]
+
+	def collision(self):
+		# Check collision with walls
+		if self.x < 0 or self.x > S_WIDTH or self.y < 0 or self.y > S_HEIGHT:
+			return True
+
+		# Check if the snake runs into itself
+		if self.head in self.list[:-1]:
+			return True
+
+		return False
+
+
+#--Game-specific variables--
 food_size = 15
 score_value = 0
 direction = ""
 
-def plot_snake():
-	for i, coord in enumerate(snk_list):
-		if i == len(snk_list) - 1:
-			pygame.draw.rect(screen, green, [coord[0], coord[1], snk_size, snk_size])
-		else:
-			pygame.draw.rect(screen, black, [coord[0], coord[1], snk_size, snk_size])
 
 def get_food_coords():
 	foodX = random.randint(15, S_WIDTH-1)
@@ -57,18 +89,18 @@ def game_over():
 	screen.blit(over_text, (90, 190))
 
 foodX, foodY = get_food_coords()
-snk_list = []
-snk_len = 1
 
 if not os.path.exists("highScore.txt"):
 	with open("highScore.txt", "w") as file:
 		file.write("0")
 
 with open("highScore.txt", "r") as file:
-		hiscore = int(file.read())
+	hiscore = int(file.read())
 
 running = True
 gameover = False
+
+snake = Snake()
 
 while running:
 	if gameover:
@@ -85,53 +117,39 @@ while running:
 				running = False
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_LEFT and direction != "right":
-					velX = -init_vel
-					velY = 0
+					snake.velx = -snake.init_vel
+					snake.vely = 0
 					direction = "left"
 				if event.key == pygame.K_RIGHT and direction != "left":
-					velX = init_vel
-					velY = 0
+					snake.velx = snake.init_vel
+					snake.vely = 0
 					direction = "right"
 				if event.key == pygame.K_UP and direction != "down":
-					velY = -init_vel
-					velX = 0
+					snake.vely = -snake.init_vel
+					snake.velx = 0
 					direction = "up"
 				if event.key == pygame.K_DOWN and direction != "up":
-					velY = init_vel
-					velX = 0
+					snake.vely = snake.init_vel
+					snake.velx = 0
 					direction = "down"
 
-		snakeX += velX
-		snakeY += velY
+		snake.update()
 		clock.tick(10)
 
-		head = []
-		head.append(snakeX)
-		head.append(snakeY)
-		snk_list.append(head)
-
-		if len(snk_list) > snk_len:
-			del snk_list[0]
-
-		if is_food_eaten(snakeX, snakeY, foodX, foodY):
+		if is_food_eaten(snake.x, snake.y, foodX, foodY):
 			score_value += 10
 			foodX, foodY = get_food_coords()
-			snk_len += 1
-
-		# Check collision with walls
-		if snakeX < 0 or snakeX > S_WIDTH or snakeY < 0 or snakeY > S_HEIGHT:
-			gameover = True
-
-		# Check if the snake runs into itself
-		if head in snk_list[:-1]:
-			gameover = True
+			snake.len += 1
 
 		if score_value > hiscore:
 			hiscore = score_value
 
+		if snake.collision():
+			gameover = True
+
 		score_hiscore = font.render(f"Score: {score_value}  High Score: {hiscore}", True, black)
 		screen.blit(score_hiscore, (5, 5))
-		plot_snake()
+		snake.draw()
 		pygame.draw.rect(screen, red, [foodX, foodY, food_size, food_size])
 
 	pygame.display.update()
