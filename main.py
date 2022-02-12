@@ -47,13 +47,24 @@ class Snake():
 		head.append(self.y)
 		self.list.append(head)
 
+		if len(self.list) > self.len:
+			del self.list[0]
+
+		# Check collision with walls
+		if self.x < 0 or self.x > S_WIDTH or self.y < 0 or self.y > S_HEIGHT:
+			gameover = True
+
+		# Check if the snake runs into itself
+		if head in snake.list[:-1]:
+			gameover = True
+
 
 #--Game-specific variables--
 food_size = 15
 score_value = 0
 direction = ""
 
-	
+
 def get_food_coords():
 	foodX = random.randint(15, S_WIDTH-1)
 	foodX = foodX - (foodX % 15)
@@ -121,21 +132,10 @@ while running:
 		snake.update()
 		clock.tick(10)
 
-		if len(snake.list) > snake.len:
-			del snake.list[0]
-
 		if is_food_eaten(snake.x, snake.y, foodX, foodY):
 			score_value += 10
 			foodX, foodY = get_food_coords()
 			snake.len += 1
-
-		# Check collision with walls
-		if snake.x < 0 or snake.x > S_WIDTH or snake.y < 0 or snake.y > S_HEIGHT:
-			gameover = True
-
-		# Check if the snake runs into itself
-		if head in snake.list[:-1]:
-			gameover = True
 
 		if score_value > hiscore:
 			hiscore = score_value
