@@ -43,12 +43,24 @@ class Snake():
 	def update(self):
 		self.x += self.velx
 		self.y += self.vely
+		self.head = []
 		self.head.append(self.x)
 		self.head.append(self.y)
 		self.list.append(self.head)
 
 		if len(self.list) > self.len:
 			del self.list[0]
+
+	def collision(self):
+		# Check collision with walls
+		if self.x < 0 or self.x > S_WIDTH or self.y < 0 or self.y > S_HEIGHT:
+			return True
+
+		# Check if the snake runs into itself
+		if self.head in self.list[:-1]:
+			return True
+
+		return False
 
 
 #--Game-specific variables--
@@ -124,14 +136,6 @@ while running:
 		snake.update()
 		clock.tick(10)
 
-		# Check collision with walls
-		if snake.x < 0 or snake.x > S_WIDTH or snake.y < 0 or snake.y > S_HEIGHT:
-			gameover = True
-
-		# Check if the snake runs into itself
-		if snake.head in snake.list[:-1]:
-			gameover = True
-
 		if is_food_eaten(snake.x, snake.y, foodX, foodY):
 			score_value += 10
 			foodX, foodY = get_food_coords()
@@ -139,6 +143,9 @@ while running:
 
 		if score_value > hiscore:
 			hiscore = score_value
+
+		if snake.collision():
+			gameover = True
 
 		score_hiscore = font.render(f"Score: {score_value}  High Score: {hiscore}", True, black)
 		screen.blit(score_hiscore, (5, 5))
