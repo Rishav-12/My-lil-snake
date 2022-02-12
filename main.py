@@ -32,6 +32,7 @@ class Snake():
 		self.list = []
 		self.len = 1
 		self.head = []
+		self.direction = ""
 
 	def draw(self):
 		for i, coord in enumerate(self.list):
@@ -84,11 +85,8 @@ class Food():
 
 #--Game-specific variables--
 score_value = 0
-direction = ""
 
 def game_over():
-	velX = 0
-	velY = 0
 	over_text = over_font.render(f"Game Over", True, red)
 	screen.blit(over_text, (90, 190))
 
@@ -120,22 +118,22 @@ while running:
 			if event.type == pygame.QUIT:
 				running = False
 			if event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_LEFT and direction != "right":
+				if event.key == pygame.K_LEFT and snake.direction != "right":
 					snake.velx = -snake.init_vel
 					snake.vely = 0
-					direction = "left"
-				if event.key == pygame.K_RIGHT and direction != "left":
+					snake.direction = "left"
+				if event.key == pygame.K_RIGHT and snake.direction != "left":
 					snake.velx = snake.init_vel
 					snake.vely = 0
-					direction = "right"
-				if event.key == pygame.K_UP and direction != "down":
+					snake.direction = "right"
+				if event.key == pygame.K_UP and snake.direction != "down":
 					snake.vely = -snake.init_vel
 					snake.velx = 0
-					direction = "up"
-				if event.key == pygame.K_DOWN and direction != "up":
+					snake.direction = "up"
+				if event.key == pygame.K_DOWN and snake.direction != "up":
 					snake.vely = snake.init_vel
 					snake.velx = 0
-					direction = "down"
+					snake.direction = "down"
 
 		snake.update()
 		clock.tick(10)
