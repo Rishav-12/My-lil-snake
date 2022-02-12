@@ -104,6 +104,7 @@ gameover = False
 
 snake = Snake()
 food = Food()
+food.update()
 
 while running:
 	if gameover:
@@ -137,7 +138,6 @@ while running:
 					direction = "down"
 
 		snake.update()
-		food.update()
 		clock.tick(10)
 
 		if snake.x == food.x and snake.y == food.y:
