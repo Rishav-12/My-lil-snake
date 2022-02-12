@@ -31,6 +31,7 @@ class Snake():
 		self.vely = 0
 		self.list = []
 		self.len = 1
+		self.head = []
 
 	def draw(self):
 		for i, coord in enumerate(self.list):
@@ -42,21 +43,12 @@ class Snake():
 	def update(self):
 		self.x += self.velx
 		self.y += self.vely
-		head = []
-		head.append(self.x)
-		head.append(self.y)
-		self.list.append(head)
+		self.head.append(self.x)
+		self.head.append(self.y)
+		self.list.append(self.head)
 
 		if len(self.list) > self.len:
 			del self.list[0]
-
-		# Check collision with walls
-		if self.x < 0 or self.x > S_WIDTH or self.y < 0 or self.y > S_HEIGHT:
-			gameover = True
-
-		# Check if the snake runs into itself
-		if head in snake.list[:-1]:
-			gameover = True
 
 
 #--Game-specific variables--
@@ -131,6 +123,14 @@ while running:
 
 		snake.update()
 		clock.tick(10)
+
+		# Check collision with walls
+		if snake.x < 0 or snake.x > S_WIDTH or snake.y < 0 or snake.y > S_HEIGHT:
+			gameover = True
+
+		# Check if the snake runs into itself
+		if snake.head in snake.list[:-1]:
+			gameover = True
 
 		if is_food_eaten(snake.x, snake.y, foodX, foodY):
 			score_value += 10
