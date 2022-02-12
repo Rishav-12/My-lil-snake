@@ -62,33 +62,35 @@ class Snake():
 
 		return False
 
+class Food():
+	"""
+	defines a food
+	"""
+	def __init__(self):
+		self.x = 0
+		self.y = 0
+		self.size = 15
+
+	def draw(self):
+		pygame.draw.rect(screen, red, [self.x, self.y, self.size, self.size])
+
+	def update(self):
+		self.x = random.randint(self.size, S_WIDTH-1)
+		self.x = self.x - (self.x % self.size)
+
+		self.y = random.randint(self.size, S_WIDTH-1)
+		self.y = self.y - (self.y % self.size)
+
 
 #--Game-specific variables--
-food_size = 15
 score_value = 0
 direction = ""
-
-
-def get_food_coords():
-	foodX = random.randint(15, S_WIDTH-1)
-	foodX = foodX - (foodX % 15)
-
-	foodY = random.randint(15, S_HEIGHT-1)
-	foodY = foodY - (foodY % 15)
-
-	return foodX, foodY
-
-def is_food_eaten(x1, y1, x2, y2):
-	if x1 == x2 and y1 == y2:
-		return True
 
 def game_over():
 	velX = 0
 	velY = 0
 	over_text = over_font.render(f"Game Over", True, red)
 	screen.blit(over_text, (90, 190))
-
-foodX, foodY = get_food_coords()
 
 if not os.path.exists("highScore.txt"):
 	with open("highScore.txt", "w") as file:
@@ -101,6 +103,7 @@ running = True
 gameover = False
 
 snake = Snake()
+food = Food()
 
 while running:
 	if gameover:
@@ -134,11 +137,12 @@ while running:
 					direction = "down"
 
 		snake.update()
+		food.update()
 		clock.tick(10)
 
-		if is_food_eaten(snake.x, snake.y, foodX, foodY):
+		if snake.x == food.x and snake.y == food.y:
+			food.update()
 			score_value += 10
-			foodX, foodY = get_food_coords()
 			snake.len += 1
 
 		if score_value > hiscore:
@@ -150,6 +154,6 @@ while running:
 		score_hiscore = font.render(f"Score: {score_value}  High Score: {hiscore}", True, black)
 		screen.blit(score_hiscore, (5, 5))
 		snake.draw()
-		pygame.draw.rect(screen, red, [foodX, foodY, food_size, food_size])
+		food.draw()
 
 	pygame.display.update()
