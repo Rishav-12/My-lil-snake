@@ -106,12 +106,21 @@ food.update()
 
 while running:
 	if gameover:
+		with open("highScore.txt", "w") as file:
+			file.write(str(hiscore))
 		game_over()
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
-				with open("highScore.txt", "w") as file:
-					file.write(str(hiscore))
 				running = False
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_SPACE:
+					score_value = 0
+					snake.len = 1
+					snake.list = []
+					snake.x = 150
+					snake.y = 150
+					food.update()
+					gameover = False
 	else:
 		screen.fill(white)
 		for event in pygame.event.get():
