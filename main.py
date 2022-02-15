@@ -89,6 +89,15 @@ score_value = 0
 def game_over():
 	over_text = over_font.render(f"Game Over", True, red)
 	screen.blit(over_text, (90, 190))
+	restart_text = font.render("Press SPACE to start a new game", True, red)
+	screen.blit(restart_text, (10, 280))
+
+def reset_game(snake, food):
+	snake.len = 1
+	snake.list = []
+	snake.x = 150
+	snake.y = 150
+	food.update()
 
 if not os.path.exists("highScore.txt"):
 	with open("highScore.txt", "w") as file:
@@ -114,12 +123,8 @@ while running:
 				running = False
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_SPACE:
+					reset_game(snake, food)
 					score_value = 0
-					snake.len = 1
-					snake.list = []
-					snake.x = 150
-					snake.y = 150
-					food.update()
 					gameover = False
 	else:
 		screen.fill(white)
