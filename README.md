@@ -1,4 +1,4 @@
-# snake-game
+# SnakeMania
 A Fun Project/Game
 
 ### Motivation

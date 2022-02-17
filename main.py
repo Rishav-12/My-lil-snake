@@ -7,7 +7,7 @@ import os
 pygame.init()
 S_WIDTH, S_HEIGHT = 480, 480
 screen = pygame.display.set_mode((S_WIDTH, S_HEIGHT))
-pygame.display.set_caption("Snakes")
+pygame.display.set_caption("Snake Mania")
 font = pygame.font.Font("MICROSS.TTF", 30)
 over_font = pygame.font.Font("MICROSS.TTF", 60)
 clock = pygame.time.Clock()
